@@ -6,7 +6,7 @@ trait Arrows {
   trait Arrow extends Universal {
     type Domain <: Universal
     type Image <: Universal
-    override type Rep = Domain#Rep => Image#Rep
+    override type rep = Domain#rep => Image#rep
   }
 
   object Arrow {

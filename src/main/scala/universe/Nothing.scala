@@ -2,8 +2,8 @@ package universe
 
 trait Nothing {
   self: Individuals =>
-  type Nothing = Nothing.type
-  implicit object Nothing extends Universal {
-    override type Rep = Unit
+  type nothing = nothing.type
+  implicit object nothing extends Universal {
+    override type rep = Unit
   }
 }

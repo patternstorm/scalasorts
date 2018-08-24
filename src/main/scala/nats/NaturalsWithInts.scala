@@ -11,10 +11,10 @@ trait NaturalsWithInts {
     object NAT extends NAT {
       override type sort = nat.type
       implicit object nat extends Universal {
-        override type Rep = NATasInt
+        override type rep = NATasInt
       }
       override val sort : sort = nat
-      override private[nats] def zeroImp(x: Nothing#Rep): NATasInt = NATasInt(0)
+      override private[nats] def zeroImp(x: nothing#rep): NATasInt = NATasInt(0)
       override private[nats] def succImp(x: NATasInt): NATasInt = NATasInt(x.state + 1)
       override private[nats] def addImp(x: NATasInt, y: NATasInt): NATasInt = NATasInt(x.state + y.state)
     }

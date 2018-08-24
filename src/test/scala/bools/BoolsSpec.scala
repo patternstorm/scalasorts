@@ -10,14 +10,14 @@ with Universe with Bools with BoolsWithBooleans {
 
   describe("..") {
     it("...") {
-      implicitly[Nothing]
+      implicitly[nothing]
       implicitly[BOOL.sort]
 
       implicitly[BOOL.True]
-      implicitly[Morphism[BOOL.True, Nothing ->: BOOL.sort]]
+      implicitly[Morphism[BOOL.True, nothing ->: BOOL.sort]]
 
       implicitly[BOOL.False]
-      implicitly[Morphism[BOOL.False, Nothing ->: BOOL.sort]]
+      implicitly[Morphism[BOOL.False, nothing ->: BOOL.sort]]
 
       implicitly[BOOL.not]
       implicitly[Morphism[BOOL.not, BOOL.sort ->: BOOL.sort]]
@@ -30,12 +30,12 @@ with Universe with Bools with BoolsWithBooleans {
       
       implicitly[Morphism[BOOL.and ∙ (BOOL.not ∙ BOOL.True), BOOL.sort ->: BOOL.sort]]
       
-      val z = implicitly[Morphism[(BOOL.or ∙ (BOOL.not ∙ BOOL.False)) ∙ BOOL.True, Nothing ->: BOOL.sort]]
+      val z = implicitly[Morphism[(BOOL.or ∙ (BOOL.not ∙ BOOL.False)) ∙ BOOL.True, nothing ->: BOOL.sort]]
       z().state shouldEqual true
-      val y = implicitly[Morphism[BOOL.not ∙ ((BOOL.and ∙ (BOOL.not ∙ BOOL.True)) ∙ BOOL.True), Nothing ->: BOOL.sort]]
+      val y = implicitly[Morphism[BOOL.not ∙ ((BOOL.and ∙ (BOOL.not ∙ BOOL.True)) ∙ BOOL.True), nothing ->: BOOL.sort]]
       y().state shouldEqual true
-      val x = implicitly[Morphism[(BOOL.and ∙ (BOOL.not ∙ BOOL.False)) ∙ (BOOL.not ∙ ((BOOL.or ∙ (BOOL.not ∙ BOOL.True)) ∙ BOOL.False)), Nothing ->: BOOL.sort]]
-      val rep: BOOL.sort#Rep = x()
+      val x = implicitly[Morphism[(BOOL.and ∙ (BOOL.not ∙ BOOL.False)) ∙ (BOOL.not ∙ ((BOOL.or ∙ (BOOL.not ∙ BOOL.True)) ∙ BOOL.False)), nothing ->: BOOL.sort]]
+      val rep: BOOL.sort#rep = x()
       rep.state shouldEqual true
       //implicitly[(BOOL.not ∙ BOOL.not) ->: BOOL.nat]
 
