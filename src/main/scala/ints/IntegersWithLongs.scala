@@ -19,11 +19,11 @@ trait IntegersWithLongs {
         override def apply(x: nothing#rep): INTasLong = INTasLong(0)
       }
 
-      implicit object succImp extends Morphism[succ, int ->: int] {
+      implicit object succImp extends (succ :: int ->: int) {
         override def apply(n: nothing#rep): INTasLong => INTasLong = x => INTasLong(x.state + 1)
       }
 
-      implicit object addImp extends Morphism[add, int ->: int ->: int] {
+      implicit object addImp extends (add :: int ->: int ->: int) {
         override def apply(n: nothing#rep): INTasLong => INTasLong => INTasLong = x => y => INTasLong(x.state + y.state)
       }
     }

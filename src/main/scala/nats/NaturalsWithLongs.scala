@@ -15,7 +15,7 @@ trait NaturalsWithLongs {
       }
       override val sort : sort = nat
 
-      implicit object zeroImp extends Morphism[zero, nat] {
+      implicit object zeroImp extends (zero :: nat) {
         override def apply(n: nothing#rep): NATasLong = NATasLong(0)
       }
 

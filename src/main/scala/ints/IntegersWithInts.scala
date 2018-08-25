@@ -21,11 +21,11 @@ trait IntegersWithInts {
         override def apply(x: nothing#rep): INTasInt = INTasInt(0)
       }
 
-      implicit object succImp extends Morphism[succ, int ->: int] {
+      implicit object succImp extends (succ :: int ->: int) {
         override def apply(n: nothing#rep): INTasInt => INTasInt = x => INTasInt(x.state + 1)
       }
 
-      implicit object addImp extends Morphism[add, int ->: int ->: int] {
+      implicit object addImp extends (add :: int ->: int ->: int) {
         override def apply(n: nothing#rep): INTasInt => INTasInt => INTasInt = x => y => INTasInt(x.state + y.state)
       }
 
