@@ -14,9 +14,17 @@ trait NaturalsWithInts {
         override type rep = NATasInt
       }
       override val sort : sort = nat
-      override private[nats] def zeroImp(x: nothing#rep): NATasInt = NATasInt(0)
-      override private[nats] def succImp(x: NATasInt): NATasInt = NATasInt(x.state + 1)
-      override private[nats] def addImp(x: NATasInt, y: NATasInt): NATasInt = NATasInt(x.state + y.state)
-    }
 
+      implicit object zeroImp extends (zero :: nat) {
+        override def apply(n: nothing#rep): NATasInt = NATasInt(0)
+      }
+
+      implicit object succImp extends (succ :: nat ->: nat) {
+        override def apply(n: nothing#rep): NATasInt => NATasInt = x => NATasInt(x.state + 1)
+      }
+
+      implicit object addImp extends (add :: nat ->: nat ->: nat) {
+        override def apply(n: nothing#rep): NATasInt => NATasInt => NATasInt = x => y => NATasInt(x.state + y.state)
+      }
+    }
 }

@@ -16,25 +16,26 @@ trait BoolsWithBooleans {
       }
       override val sort : sort = bool
 
-      implicit object trueImp extends (True :: nothing ->: bool) {
+      implicit object trueImp extends (True :: bool) {
         override def apply(x: nothing#rep): BOOLasBoolean = BOOLasBoolean(true)
       }
 
-      implicit object falseImp extends (False :: nothing ->: bool) {
+      implicit object falseImp extends (False :: bool) {
         override def apply(x: nothing#rep): BOOLasBoolean = BOOLasBoolean(false)
       }
 
       implicit object notImp extends (not :: bool ->: bool) {
-        override def apply(x: BOOLasBoolean): BOOLasBoolean = BOOLasBoolean(!x.state)
+        private def notImp(x: BOOLasBoolean): BOOLasBoolean = BOOLasBoolean(!x.state)
+        override def apply(n: nothing#rep): BOOLasBoolean => BOOLasBoolean = x => notImp(x)
       }
 
       implicit object andImp extends (and :: bool ->: bool ->: bool) {
-        override def apply(x: BOOLasBoolean): BOOLasBoolean => BOOLasBoolean = andImp(x,_)
+        override def apply(n: nothing#rep): BOOLasBoolean => BOOLasBoolean => BOOLasBoolean = x => y => andImp(x,y)
         private def andImp(x: BOOLasBoolean, y: BOOLasBoolean): BOOLasBoolean = BOOLasBoolean(x.state && y.state)
       }
 
       implicit object orImp extends (or :: bool ->: bool ->: bool) {
-        override def apply(x: BOOLasBoolean): BOOLasBoolean => BOOLasBoolean   = orImp(x,_)
+        override def apply(n: nothing#rep): BOOLasBoolean => BOOLasBoolean => BOOLasBoolean = x => y => orImp(x,y)
         private def orImp(x: BOOLasBoolean, y: BOOLasBoolean): BOOLasBoolean = BOOLasBoolean(x.state || y.state)
       }
     }

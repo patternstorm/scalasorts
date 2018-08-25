@@ -16,8 +16,18 @@ trait IntegersWithInts {
       }
 
       override val sort: sort = int
-      override private[ints] def zeroImp(x: nothing#rep): INTasInt = INTasInt(0)
-      override private[ints] def succImp(x: INTasInt): INTasInt = INTasInt(x.state + 1)
-      override private[ints] def addImp(x: INTasInt, y: INTasInt): INTasInt = INTasInt(x.state + y.state)
+
+      implicit object zeroImp extends (zero :: int) {
+        override def apply(x: nothing#rep): INTasInt = INTasInt(0)
+      }
+
+      implicit object succImp extends Morphism[succ, int ->: int] {
+        override def apply(n: nothing#rep): INTasInt => INTasInt = x => INTasInt(x.state + 1)
+      }
+
+      implicit object addImp extends Morphism[add, int ->: int ->: int] {
+        override def apply(n: nothing#rep): INTasInt => INTasInt => INTasInt = x => y => INTasInt(x.state + y.state)
+      }
+
     }
 }

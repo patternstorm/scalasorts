@@ -14,8 +14,17 @@ trait NaturalsWithLongs {
         override type rep = NATasLong
       }
       override val sort : sort = nat
-      override private[nats] def zeroImp(x: nothing#rep): NATasLong = NATasLong(0)
-      override private[nats] def succImp(x: NATasLong): NATasLong = NATasLong(x.state + 1)
-      override private[nats] def addImp(x: NATasLong, y: NATasLong): NATasLong = NATasLong(x.state + y.state)
+
+      implicit object zeroImp extends Morphism[zero, nat] {
+        override def apply(n: nothing#rep): NATasLong = NATasLong(0)
+      }
+
+      implicit object succImp extends (succ :: nat ->: nat) {
+        override def apply(n: nothing#rep): NATasLong => NATasLong = x => NATasLong(x.state + 1)
+      }
+
+      implicit object addImp extends (add :: nat ->: nat ->: nat) {
+        override def apply(n: nothing#rep): NATasLong => NATasLong => NATasLong = x => y => NATasLong(x.state + y.state)
+      }
     }
 }

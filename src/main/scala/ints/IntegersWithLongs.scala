@@ -15,8 +15,16 @@ trait IntegersWithLongs {
       }
       override val sort : sort = int
 
-      override private[ints] def zeroImp(x: nothing#rep): INTasLong = INTasLong(0)
-      override private[ints] def succImp(x: INTasLong): INTasLong = INTasLong(x.state + 1)
-      override private[ints] def addImp(x: INTasLong, y: INTasLong): INTasLong = INTasLong(x.state + y.state)
+      implicit object zeroImp extends (zero :: int) {
+        override def apply(x: nothing#rep): INTasLong = INTasLong(0)
+      }
+
+      implicit object succImp extends Morphism[succ, int ->: int] {
+        override def apply(n: nothing#rep): INTasLong => INTasLong = x => INTasLong(x.state + 1)
+      }
+
+      implicit object addImp extends Morphism[add, int ->: int ->: int] {
+        override def apply(n: nothing#rep): INTasLong => INTasLong => INTasLong = x => y => INTasLong(x.state + y.state)
+      }
     }
 }
