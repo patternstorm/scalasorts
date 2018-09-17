@@ -2,7 +2,7 @@ package universe
 
 // TODO: rename to terms
 trait Morphisms {
-  self: Individuals with Imps with Particulars with Universals =>
+  self: Individuals with Particulars with Universals =>
 
 
   abstract class Morphism[X <: Particular, U <: Universal](implicit x: X, u: U) {

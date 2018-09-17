@@ -4,17 +4,9 @@ trait Universals {
   self: Individuals =>
 
   trait as[U <: Sort, T] {
-    implicit def encode(x: Rep[U]): T
+    implicit def encode(x: U#rep): T
 
-    implicit def decode(x: T): Rep[U]
-  }
-
-  trait Rep[U <: Sort]
-
-  object Rep {
-    implicit def from[T, U <: Sort](x: T)(implicit u: U, imp: U as T): Rep[U] = imp.decode(x)
-
-    implicit def to[T, U <: Sort](x: Rep[U])(implicit imp: U as T): T = imp.encode(x)
+    implicit def decode(x: T): U#rep
   }
 
   //{val identity: UUID = UUID.randomUUID()}
@@ -32,7 +24,12 @@ trait Universals {
 
   trait Sort extends Universal {
     override type self = this.type
-    type rep <: Rep[self]
+  }
+
+  object Sort {
+    implicit def from[T, U <: Sort](x: T)(implicit u: U, imp: U as T): U#rep = imp.decode(x)
+
+    implicit def to[T, U <: Sort](x: U#rep)(implicit imp: U as T): T = imp.encode(x)
   }
 
   trait Arrow extends Universal {

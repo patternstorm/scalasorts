@@ -8,11 +8,11 @@ trait NaturalsWithInts {
   case class NatAsInt(state: Int)
 
   implicit object NatAsInt extends (nat as NatAsInt) {
-    implicit override def encode(x: nat.rep): NatAsInt = x match {
-      case nat._zero => NatAsInt(0)
-      case nat._succ(n) => NatAsInt(encode(n).state + 1)
+    override def encode(x: nat.rep): NatAsInt = x match {
+      case nat.zero.rep => NatAsInt(0)
+      case nat.succ.rep(n) => NatAsInt(encode(n).state + 1)
     }
 
-    implicit override def decode(x: NatAsInt): nat.rep = if (x.state == 0) nat._zero else nat._succ(decode(NatAsInt(x.state - 1)))
+    override def decode(x: NatAsInt): nat.rep = if (x.state == 0) nat.zero.rep else nat.succ.rep(decode(NatAsInt(x.state - 1)))
   }
 }

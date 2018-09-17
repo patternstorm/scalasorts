@@ -5,10 +5,9 @@ import org.scalatest.{FunSpec, GivenWhenThen, Matchers}
 import universe.Universe._
 
 
-
 class NaturalsIntegersSpec extends FunSpec with Matchers with GivenWhenThen
   with Naturals with NaturalsWithInts with Integers with IntegersWithLongs {
-  
+
   describe("..") {
     it("...") {
       implicitly[nothing]
@@ -51,13 +50,16 @@ class NaturalsIntegersSpec extends FunSpec with Matchers with GivenWhenThen
       v shouldEqual 2L
 
       import nat._
-      val m = add(succ(zero()),succ(zero()))
-      m().state shouldEqual 2
+      val m = add(succ(zero()), succ(zero()))
+      var v2: NatAsInt = m()
+      v2.state shouldEqual 2
 
       val s = implicitly[Morphism[nat.succ, nat ->: nat]]
-      s()(n()).state shouldEqual 3
+      v2 = s()(n())
+      v2.state shouldEqual 3
       val k = succ(n)
-      k().state shouldEqual 3
+      v2 = k()
+      v2.state shouldEqual 3
 
       //implicitly[ (nat.add ∙ (nat.succ ∙ nat.zero) ∙ nat.zero) ⟿ (nat.succ ∙ nat.zero)]
       //implicitly[ (nat.add ∙ (nat.succ ∙ nat.zero) ∙ (nat.succ ∙ nat.zero)) ⟿ (nat.succ ∙ nat.zero)]

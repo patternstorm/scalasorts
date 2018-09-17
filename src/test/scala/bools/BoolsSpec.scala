@@ -30,8 +30,7 @@ class BoolsSpec extends FunSpec with Matchers with GivenWhenThen
 
       implicitly[Morphism[bool.and ∙ (bool.not ∙ bool.`true`), bool ->: bool]]
 
-      //val z = implicitly[Morphism[(bool.or ∙ (bool.not ∙ bool.`false`)) ∙ bool.`true`, bool]]
-      val z = implicitly[Morphism[bool.not ∙ bool.`false`, bool]]
+      val z = implicitly[Morphism[(bool.or ∙ (bool.not ∙ bool.`false`)) ∙ bool.`true`, bool]]
       var value: BOOLasBoolean = z()
       value.state shouldEqual true
       val y = implicitly[Morphism[bool.not ∙ ((bool.and ∙ (bool.not ∙ bool.`true`)) ∙ bool.`true`), bool]]

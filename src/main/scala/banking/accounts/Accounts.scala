@@ -11,23 +11,20 @@ trait Accounts {
 
   implicit object account extends Sort {
 
-    override type rep = Rep[account]
 
-    sealed trait _account extends rep
-
-    case object _create extends _account
-
-    case class _deposit(acc: rep, amount: nat.rep) extends _account
+    sealed trait rep
 
     //create: -> account
     type create = create.type
 
-    implicit object create extends Operator {
+    implicit case object create extends Operator {
       def apply()(implicit m: create :: account): create :: account = m
 
       implicit object imp extends (create :: account) {
-        override def apply(): rep = _create
+        override def apply(): account.rep = rep
       }
+
+      case object rep extends account.rep
 
     }
 
@@ -35,12 +32,13 @@ trait Accounts {
     type deposit = deposit.type
 
     implicit object deposit extends Operator {
-      def apply[N <: Particular, A <: Particular](account: A :: account, amount: N :: nat)
-                                                 (implicit m: ((deposit ∙ A) ∙ N) :: account): ((deposit ∙ A) ∙ N) :: account = m
+      def apply[N <: Particular, A <: Particular](account: A :: account, amount: N :: nat)(implicit m: ((deposit ∙ A) ∙ N) :: account): ((deposit ∙ A) ∙ N) :: account = m
 
       implicit object imp extends (deposit :: account ->: nat ->: account) {
-        override def apply(): rep => nat.rep => rep = acc => n => _deposit(acc, n)
+        override def apply(): account.rep => nat.rep => account.rep = acc => n => rep(acc, n)
       }
+
+      case class rep(acc: account.rep, amount: nat.rep) extends account.rep
 
     }
 
