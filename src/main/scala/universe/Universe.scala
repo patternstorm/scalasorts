@@ -3,7 +3,8 @@ package universe
 import equality.Equality
 
 
-trait Universe extends Nothing with Individuals with Morphisms with Equality
+object Universe extends Individuals with Particulars with Universals
+  with Operations with Morphisms with Equality with Imps
 
 
 

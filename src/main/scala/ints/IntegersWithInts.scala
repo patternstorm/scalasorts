@@ -1,33 +1,20 @@
 package ints
 
-import universe.Universe
+import universe.Universe._
 
 trait IntegersWithInts {
-    self: Universe with Integers =>
+  self: Integers =>
 
-    case class INTasInt(state: Int)
-    object INTasInt { implicit def asInt(x: INTasInt): Int = x.state }
+  case class IntAsInt(state: Int)
 
-    object INT extends INT {
-      override type sort = int.type
-
-      implicit object int extends Universal {
-        override type rep = INTasInt
-      }
-
-      override val sort: sort = int
-
-      implicit object zeroImp extends (zero :: int) {
-        override def apply(x: nothing#rep): INTasInt = INTasInt(0)
-      }
-
-      implicit object succImp extends (succ :: int ->: int) {
-        override def apply(n: nothing#rep): INTasInt => INTasInt = x => INTasInt(x.state + 1)
-      }
-
-      implicit object addImp extends (add :: int ->: int ->: int) {
-        override def apply(n: nothing#rep): INTasInt => INTasInt => INTasInt = x => y => INTasInt(x.state + y.state)
-      }
-
+  implicit object IntAsInt extends (int as IntAsInt) {
+    implicit override def encode(x: int.rep): IntAsInt = x match {
+      case int._zero => IntAsInt(0)
+      case int._succ(n) => IntAsInt(encode(n).state + 1)
     }
+
+    implicit override def decode(x: IntAsInt): int.rep = if (x.state == 0) int._zero else int._succ(decode(IntAsInt(x.state - 1)))
+  }
+
 }
+

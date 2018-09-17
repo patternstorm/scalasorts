@@ -1,30 +1,19 @@
 package ints
 
-import universe.Universe
+import universe.Universe._
 
 trait IntegersWithLongs {
-    self: Universe with Integers =>
+  self: Integers =>
 
-    case class INTasLong(state: Long)
-    object INTasLong { implicit def asLong(x: INTasLong): Long =x.state }
+  type IntAsLong = Long
 
-    object INT extends INT {
-      override type sort = int.type
-      implicit object int extends Universal {
-        override type rep = INTasLong
-      }
-      override val sort : sort = int
-
-      implicit object zeroImp extends (zero :: int) {
-        override def apply(x: nothing#rep): INTasLong = INTasLong(0)
-      }
-
-      implicit object succImp extends (succ :: int ->: int) {
-        override def apply(n: nothing#rep): INTasLong => INTasLong = x => INTasLong(x.state + 1)
-      }
-
-      implicit object addImp extends (add :: int ->: int ->: int) {
-        override def apply(n: nothing#rep): INTasLong => INTasLong => INTasLong = x => y => INTasLong(x.state + y.state)
-      }
+  implicit object NatAsLong extends (int as IntAsLong) {
+    override def encode(x: Rep[int]): IntAsLong = x match {
+      case int._zero => 0
+      case int._succ(n) => encode(n) + 1
     }
+
+    override def decode(x: IntAsLong): Rep[int] = if (x == 0) int._zero else int._succ(decode(x - 1))
+  }
+
 }

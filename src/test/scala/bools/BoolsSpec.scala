@@ -2,68 +2,74 @@ package bools
 
 
 import org.scalatest.{FunSpec, GivenWhenThen, Matchers}
-import universe.Universe
+import universe.Universe._
 
 
 class BoolsSpec extends FunSpec with Matchers with GivenWhenThen
-with Universe with Bools with BoolsWithBooleans {
+  with Bools with BoolWithBooleans {
 
   describe("..") {
     it("...") {
       implicitly[nothing]
-      implicitly[BOOL.sort]
+      implicitly[bool]
 
-      implicitly[BOOL.True]
-      implicitly[Morphism[BOOL.True, BOOL.sort]]
+      implicitly[bool.`true`]
+      implicitly[Morphism[bool.`true`, bool]]
 
-      implicitly[BOOL.False]
-      implicitly[Morphism[BOOL.False, BOOL.sort]]
+      implicitly[bool.`false`]
+      implicitly[Morphism[bool.`false`, bool]]
 
-      implicitly[BOOL.not]
-      implicitly[Morphism[BOOL.not, BOOL.sort ->: BOOL.sort]]
+      implicitly[bool.not]
+      implicitly[Morphism[bool.not, bool ->: bool]]
 
-      implicitly[BOOL.and]
-      implicitly[Morphism[BOOL.and, BOOL.sort ->: BOOL.sort ->: BOOL.sort]]
+      implicitly[bool.and]
+      implicitly[Morphism[bool.and, bool ->: bool ->: bool]]
 
-      implicitly[BOOL.or]
-      implicitly[Morphism[BOOL.or, BOOL.sort ->: BOOL.sort ->: BOOL.sort]]
-      
-      implicitly[Morphism[BOOL.and ∙ (BOOL.not ∙ BOOL.True), BOOL.sort ->: BOOL.sort]]
-      
-      val z = implicitly[Morphism[(BOOL.or ∙ (BOOL.not ∙ BOOL.False)) ∙ BOOL.True, BOOL.sort]]
-      z().state shouldEqual true
-      val y = implicitly[Morphism[BOOL.not ∙ ((BOOL.and ∙ (BOOL.not ∙ BOOL.True)) ∙ BOOL.True), BOOL.sort]]
-      y().state shouldEqual true
-      val x = implicitly[Morphism[(BOOL.and ∙ (BOOL.not ∙ BOOL.False)) ∙ (BOOL.not ∙ ((BOOL.or ∙ (BOOL.not ∙ BOOL.True)) ∙ BOOL.False)), BOOL.sort]]
-      val rep: BOOL.sort#rep = x()
-      rep.state shouldEqual true
-      //implicitly[(BOOL.not ∙ BOOL.not) ->: BOOL.nat]
+      implicitly[bool.or]
+      implicitly[Morphism[bool.or, bool ->: bool ->: bool]]
 
-      val term1 : BOOL.not ∙ BOOL.True = implicitly[BOOL.not ∙ BOOL.True]
-      val term2 : (BOOL.and ∙ (BOOL.not ∙ BOOL.False)) ∙ (BOOL.not ∙ ((BOOL.or ∙ (BOOL.not ∙ BOOL.True)) ∙ BOOL.False)) = implicitly[(BOOL.and ∙ (BOOL.not ∙ BOOL.False)) ∙ (BOOL.not ∙ ((BOOL.or ∙ (BOOL.not ∙ BOOL.True)) ∙ BOOL.False))]
-      //val term2 = implicitly[BOOL.not ∙ BOOL.not]
+      implicitly[Morphism[bool.and ∙ (bool.not ∙ bool.`true`), bool ->: bool]]
+
+      //val z = implicitly[Morphism[(bool.or ∙ (bool.not ∙ bool.`false`)) ∙ bool.`true`, bool]]
+      val z = implicitly[Morphism[bool.not ∙ bool.`false`, bool]]
+      var value: BOOLasBoolean = z()
+      value.state shouldEqual true
+      val y = implicitly[Morphism[bool.not ∙ ((bool.and ∙ (bool.not ∙ bool.`true`)) ∙ bool.`true`), bool]]
+      value = y()
+      value.state shouldEqual true
+      val x = implicitly[Morphism[(bool.and ∙ (bool.not ∙ bool.`false`)) ∙ (bool.not ∙ ((bool.or ∙ (bool.not ∙ bool.`true`)) ∙ bool.`false`)), bool]]
+      value = x()
+      value.state shouldEqual true
+      //implicitly[(bool.not ∙ bool.not) ->: bool.nat]
+
+      val term1: bool.not ∙ bool.`true` = implicitly[bool.not ∙ bool.`true`]
+      val term2: (bool.and ∙ (bool.not ∙ bool.`false`)) ∙ (bool.not ∙ ((bool.or ∙ (bool.not ∙ bool.`true`)) ∙ bool.`false`)) = implicitly[(bool.and ∙ (bool.not ∙ bool.`false`)) ∙ (bool.not ∙ ((bool.or ∙ (bool.not ∙ bool.`true`)) ∙ bool.`false`))]
+      //val term2 = implicitly[bool.not ∙ bool.not]
 
 
-      val n  = BOOL.and(BOOL.not(BOOL.False()),BOOL.not(BOOL.True()))
-      val w: Boolean = n()
-      w shouldEqual false
+      val n = bool.and(bool.not(bool.`false`()), bool.not(bool.`true`()))
+      value = n()
+      value.state shouldEqual false
 
-      val l  = BOOL.or(BOOL.not(BOOL.True()),BOOL.not(BOOL.False()))
-      val v: Boolean = l()
-      v shouldEqual true
+      val l = bool.or(bool.not(bool.`true`()), bool.not(bool.`false`()))
+      value = l()
+      value.state shouldEqual true
 
-      import BOOL._
-      val m = and(BOOL.not(True()),BOOL.not(False()))
-      m().state shouldEqual false
+      import bool._
+      val m = and(bool.not(`true`()), bool.not(`false`()))
+      value = m()
+      value.state shouldEqual false
 
-      val s =implicitly[Morphism[BOOL.not, BOOL.sort ->: BOOL.sort]]
-      s()(n()).state shouldEqual true
-      val k = BOOL.not(n)
-      k().state shouldEqual true
+      val s = implicitly[Morphism[bool.not, bool ->: bool]]
+      value = s()(n())
+      value.state shouldEqual true
+      val k = bool.not(n)
+      value = k()
+      value.state shouldEqual true
 
-      BOOL.and
+      bool.and
 
-      BOOL.and.hashCode() shouldNot equal (BOOL.not.hashCode())
+      bool.and.hashCode() shouldNot equal(bool.not.hashCode())
 
     }
   }

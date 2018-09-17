@@ -1,30 +1,18 @@
 package nats
 
-import universe.Universe
+import universe.Universe._
 
 trait NaturalsWithInts {
-    self: Universe with Naturals =>
+  self: Naturals =>
 
-    case class NATasInt(state: Int)
-    object NATasInt { implicit def asInt(x: NATasInt): Int = x.state }
+  case class NatAsInt(state: Int)
 
-    object NAT extends NAT {
-      override type sort = nat.type
-      implicit object nat extends Universal {
-        override type rep = NATasInt
-      }
-      override val sort : sort = nat
-
-      implicit object zeroImp extends (zero :: nat) {
-        override def apply(n: nothing#rep): NATasInt = NATasInt(0)
-      }
-
-      implicit object succImp extends (succ :: nat ->: nat) {
-        override def apply(n: nothing#rep): NATasInt => NATasInt = x => NATasInt(x.state + 1)
-      }
-
-      implicit object addImp extends (add :: nat ->: nat ->: nat) {
-        override def apply(n: nothing#rep): NATasInt => NATasInt => NATasInt = x => y => NATasInt(x.state + y.state)
-      }
+  implicit object NatAsInt extends (nat as NatAsInt) {
+    implicit override def encode(x: nat.rep): NatAsInt = x match {
+      case nat._zero => NatAsInt(0)
+      case nat._succ(n) => NatAsInt(encode(n).state + 1)
     }
+
+    implicit override def decode(x: NatAsInt): nat.rep = if (x.state == 0) nat._zero else nat._succ(decode(NatAsInt(x.state - 1)))
+  }
 }
