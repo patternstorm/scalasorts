@@ -13,7 +13,7 @@ trait Bools {
     //`true`: -> bool
     type `true` = `true`.type
     implicit object `true` extends Operator {
-      def apply()(implicit m: `true` :: bool): `true` :: bool = m
+      def apply(): `true` = `true`
 
       implicit object imp extends (`true` :: bool) {
         override def apply(): bool.rep = rep
@@ -27,7 +27,7 @@ trait Bools {
     //`false`: -> bool
     type `false` = `false`.type
     implicit object `false` extends Operator {
-      def apply()(implicit m: `false` :: bool): `false` :: bool = m
+      def apply(): `false` = `false`
 
       implicit object imp extends (`false` :: bool) {
         override def apply(): bool.rep = rep
@@ -41,7 +41,7 @@ trait Bools {
     //not: bool -> bool
     type not = not.type
     implicit object not extends Operator {
-      def apply[X <: Particular](x: X :: bool)(implicit m: (not ∙ X) :: bool): (not ∙ X) :: bool = m
+      def apply[X <: Particular](x: X)(implicit ev1: X :: bool, m: not ∙ X): not ∙ X = m
 
       implicit object imp extends (not :: bool ->: bool) {
         override def apply(): rep => rep = x => x match {
@@ -55,7 +55,7 @@ trait Bools {
     //and: bool, bool -> bool
     type and = and.type
     implicit object and extends Operator {
-      def apply[X <: Particular, Y <: Particular](x: X :: bool, y: Y :: bool)(implicit m: ((and ∙ X) ∙ Y) :: bool): ((and ∙ X) ∙ Y) :: bool = m
+      def apply[X <: Particular, Y <: Particular](x: X, y: Y)(implicit ev1: X :: bool, ev2: Y :: bool, m: (and ∙ X) ∙ Y): (and ∙ X) ∙ Y = m
 
       implicit object imp extends (and :: bool ->: bool ->: bool) {
         override def apply(): rep => rep => rep = x => y => x match {
@@ -69,7 +69,7 @@ trait Bools {
     //or: bool, bool -> bool
     type or = or.type
     implicit object or extends Operator {
-      def apply[X <: Particular, Y <: Particular](x: X :: bool, y: Y :: bool)(implicit m: ((or ∙ X) ∙ Y) :: bool): ((or ∙ X) ∙ Y) :: bool = m
+      def apply[X <: Particular, Y <: Particular](x: X, y: Y)(implicit ev1: X :: bool, ev2: Y :: bool, m: (or ∙ X) ∙ Y): (or ∙ X) ∙ Y = m
 
       implicit object imp extends (or :: bool ->: bool ->: bool) {
         override def apply(): rep => rep => rep = x => y => x match {

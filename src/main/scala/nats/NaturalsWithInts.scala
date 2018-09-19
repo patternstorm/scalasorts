@@ -15,4 +15,8 @@ trait NaturalsWithInts {
 
     override def decode(x: NatAsInt): nat.rep = if (x.state == 0) nat.zero.rep else nat.succ.rep(decode(NatAsInt(x.state - 1)))
   }
+
+  implicit object addNatAsInt extends Implementation[nat.add, nat ->: nat ->: nat, NatAsInt => NatAsInt => NatAsInt] {
+    override def apply(): NatAsInt => NatAsInt => NatAsInt = x => y => NatAsInt(x.state + y.state)
+  }
 }

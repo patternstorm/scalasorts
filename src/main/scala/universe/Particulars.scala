@@ -3,8 +3,11 @@ package universe
 trait Particulars {
   self: Individuals with Universals with Morphisms =>
 
+
   sealed trait Particular extends Individual {
     override type self <: Particular
+
+    def apply[T, U <: Universal]()(implicit ev1: self :: U, ev2: Implementation[self, U, T]): T = ev2()
   }
 
   trait Operator extends Particular {

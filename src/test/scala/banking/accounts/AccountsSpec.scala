@@ -10,7 +10,7 @@ class AccountsSpec extends FunSpec with Matchers with GivenWhenThen
 
   describe("...") {
     it("...") {
-      val m = account.deposit(account.create(), nat.succ(nat.zero()))
+      val m = account.deposit(account.create, nat.succ(nat.zero))
       val acc: AccountRep = m()
       acc.balance.state shouldEqual 1
     }

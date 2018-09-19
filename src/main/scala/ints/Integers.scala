@@ -12,8 +12,10 @@ trait Integers {
 
     //zero: -> int
     type zero = zero.type
+
+
     implicit object zero extends Operator {
-      def apply()(implicit m: zero :: int): zero :: int = m
+      def apply(): zero = zero
 
       implicit object imp extends (zero :: int) {
         override def apply(): int.rep = rep
@@ -25,8 +27,9 @@ trait Integers {
 
     //succ: int -> int
     type succ = succ.type
+
     implicit object succ extends Operator {
-      def apply[Y <: Particular](x: Y :: int)(implicit m: (succ ∙ Y) :: int): (succ ∙ Y) :: int = m
+      def apply[Y <: Particular](y: Y)(implicit ev: succ ∙ Y): succ ∙ Y = ev
 
       case class rep(n: int.rep) extends int.rep
 
@@ -39,7 +42,7 @@ trait Integers {
     //add: int, int -> int
     type add = add.type
     implicit object add extends Operator {
-      def apply[X <: Particular, Y <: Particular](x: X :: int, y: Y :: int)(implicit m: ((add ∙ X) ∙ Y) :: int): ((add ∙ X) ∙ Y) :: int = m
+      def apply[X <: Particular, Y <: Particular](x: X, y: Y)(implicit ev1: X :: int, ev2: Y :: int, m: (add ∙ X) ∙ Y): (add ∙ X) ∙ Y = m
 
       implicit object imp extends (add :: int ->: int ->: int) {
         override def apply(): rep => rep => rep = x => y => x match {

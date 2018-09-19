@@ -12,6 +12,7 @@ class NaturalsIntegersSpec extends FunSpec with Matchers with GivenWhenThen
     it("...") {
       implicitly[nothing]
       implicitly[nat]
+      implicitly[nat =:= nat.self]
 
       implicitly[nat.zero]
       implicitly[Morphism[nat.zero, nat]]
@@ -20,6 +21,8 @@ class NaturalsIntegersSpec extends FunSpec with Matchers with GivenWhenThen
       implicitly[Morphism[nat.succ, nat ->: nat]]
       implicitly[Morphism[nat.succ ∙ nat.zero, nat]]
       implicitly[Morphism[(nat.succ ∙ (nat.succ ∙ nat.zero)), nat]]
+
+      implicitly[(int ->: int) <-> (IntAsLong => IntAsLong)]
 
 
       implicitly[nat.add]
@@ -42,10 +45,17 @@ class NaturalsIntegersSpec extends FunSpec with Matchers with GivenWhenThen
 
 
       val n = nat.add(nat.succ(nat.zero()), nat.succ(nat.zero()))
+      implicitly[Implementation[nat.zero, nat, NatAsInt]]
+      implicitly[Implementation[(nat.add ∙ nat.zero) ∙ nat.zero, nat, NatAsInt]]
+      implicitly[Implementation[(nat.add ∙ (nat.succ ∙ nat.zero)) ∙ nat.zero, nat, NatAsInt]]
+      implicitly[Implementation[nat.succ ∙ nat.zero, nat, NatAsInt]]
       value = n()
       value.state shouldEqual 2
 
       val l = int.add(int.succ(int.zero()), int.succ(int.zero()))
+      implicitly[Implementation[int.zero, int, IntAsLong]]
+      implicitly[Implementation[int.succ ∙ int.zero, int, IntAsLong]]
+      //implicitly[Implementation[(int.add ∙ int.zero) ∙ int.zero, int, IntAsLong]]
       var v: IntAsLong = l()
       v shouldEqual 2L
 

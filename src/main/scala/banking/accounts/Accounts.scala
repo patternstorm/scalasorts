@@ -1,7 +1,7 @@
 package banking.accounts
 
 import nats.Naturals
-import universe.Universe._
+import universe.Universe.{::, ∙, _}
 
 
 trait Accounts {
@@ -18,7 +18,7 @@ trait Accounts {
     type create = create.type
 
     implicit case object create extends Operator {
-      def apply()(implicit m: create :: account): create :: account = m
+      def apply(): create = create
 
       implicit object imp extends (create :: account) {
         override def apply(): account.rep = rep
@@ -32,7 +32,7 @@ trait Accounts {
     type deposit = deposit.type
 
     implicit object deposit extends Operator {
-      def apply[N <: Particular, A <: Particular](account: A :: account, amount: N :: nat)(implicit m: ((deposit ∙ A) ∙ N) :: account): ((deposit ∙ A) ∙ N) :: account = m
+      def apply[N <: Particular, A <: Particular](account: A, amount: N)(implicit ev1: A :: account, ev2: N :: nat, m: (deposit ∙ A) ∙ N): (deposit ∙ A) ∙ N = m
 
       implicit object imp extends (deposit :: account ->: nat ->: account) {
         override def apply(): account.rep => nat.rep => account.rep = acc => n => rep(acc, n)

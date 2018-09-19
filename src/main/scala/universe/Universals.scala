@@ -5,9 +5,19 @@ trait Universals {
 
   trait as[U <: Sort, T] {
     implicit def encode(x: U#rep): T
-
     implicit def decode(x: T): U#rep
   }
+
+  trait <->[U <: Universal, T]
+
+  object <-> {
+    implicit def sortRep[U <: Sort, T](implicit ev: U as T): U <-> T = new <->[U, T] {}
+
+    implicit def arrowRep[A <: Universal, B <: Universal, P, Q](implicit ev1: A <-> P, ev2: B <-> Q): (A ->: B) <-> (P => Q) = new <->[A ->: B, P => Q] {}
+
+    implicit def tupleRep[A <: Universal, B <: Universal, P, Q](implicit ev1: A <-> P, ev2: B <-> Q): (A `,` B) <-> (P, Q) = new <->[A `,` B, (P, Q)] {}
+  }
+
 
   //{val identity: UUID = UUID.randomUUID()}
   sealed trait Universal extends Individual {
@@ -28,8 +38,9 @@ trait Universals {
 
   object Sort {
     implicit def from[T, U <: Sort](x: T)(implicit u: U, imp: U as T): U#rep = imp.decode(x)
-
     implicit def to[T, U <: Sort](x: U#rep)(implicit imp: U as T): T = imp.encode(x)
+
+    //implicit def asRep[U <: Sort, T <: U#rep]: U <-> T = new <->[U, T] {}
   }
 
   trait Arrow extends Universal {

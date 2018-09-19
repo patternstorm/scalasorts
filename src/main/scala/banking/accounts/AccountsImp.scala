@@ -1,10 +1,10 @@
 package banking.accounts
 
-import nats.NaturalsWithInts
+import nats.{Naturals, NaturalsWithInts}
 import universe.Universe._
 
 trait AccountsImp {
-  self: Accounts with NaturalsWithInts =>
+  self: Accounts with Naturals with NaturalsWithInts =>
 
   case class AccountRep(balance: NatAsInt)
 
@@ -19,6 +19,10 @@ trait AccountsImp {
 
     override def decode(acc: AccountRep): account.rep = if (acc.balance.state == 0) account.create.rep
     else account.deposit.rep(account.create.rep, acc.balance)
+  }
+
+  implicit object depositImp extends Implementation[account.deposit, account ->: nat ->: account, AccountRep => NatAsInt => AccountRep] {
+    override def apply(): AccountRep => NatAsInt => AccountRep = acc => n => AccountRep(NatAsInt(acc.balance.state + n.state))
   }
 
 
