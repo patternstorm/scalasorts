@@ -3,6 +3,7 @@ package dsl
 import dsl.Statements._
 import org.scalatest.{FunSpec, GivenWhenThen, Matchers}
 import universe.Universe._
+import bools.BOOL._
 
 class StatementsSpec extends FunSpec with Matchers with GivenWhenThen {
 

@@ -2,6 +2,7 @@ package banking.accounts
 
 import dsl.Statements._
 import nats.NAT._
+import universe.Universe._
 
 
 object ACCOUNT {

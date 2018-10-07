@@ -3,7 +3,8 @@ package banking.accounts
 
 import nats.NATasInt
 import universe.Universe._
-//import nats.NATasInt._
+import ACCOUNT._
+import nats.NAT._
 
 case class ACCOUNTasBalance(balance: NATasInt)
 

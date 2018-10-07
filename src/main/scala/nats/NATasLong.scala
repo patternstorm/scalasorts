@@ -1,6 +1,7 @@
 package nats
 
 import universe.Universe._
+import nats.NAT._
 
 case class NATasLong(val value: Long) extends AnyVal
 

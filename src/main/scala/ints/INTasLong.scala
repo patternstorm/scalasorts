@@ -1,7 +1,7 @@
 package ints
 
 import universe.Universe._
-
+import ints.INT._
 
 case class INTasLong(val value: Long) extends AnyVal
 

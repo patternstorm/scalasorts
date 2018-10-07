@@ -1,5 +1,8 @@
 package bools
 
+import universe.Universe._
+import bools.BOOL._
+
 case class BOOLasBoolean(state: Boolean)
 
 object BOOLasBoolean extends bool.imp[BOOLasBoolean] {

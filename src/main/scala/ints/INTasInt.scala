@@ -1,6 +1,7 @@
 package ints
 
 import universe.Universe._
+import ints.INT._
 
 case class INTasInt(state: Int)
 

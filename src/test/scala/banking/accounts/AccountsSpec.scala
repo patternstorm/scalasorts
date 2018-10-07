@@ -2,7 +2,9 @@ package banking.accounts
 
 
 import org.scalatest.{FunSpec, GivenWhenThen, Matchers}
-
+import universe.Universe._
+import banking.accounts.ACCOUNT._
+import nats.NAT._
 
 class AccountsSpec extends FunSpec with Matchers with GivenWhenThen {
 

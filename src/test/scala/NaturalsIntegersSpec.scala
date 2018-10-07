@@ -4,6 +4,8 @@ import ints.INTasLong
 import nats.NATasInt
 import org.scalatest.{FunSpec, GivenWhenThen, Matchers}
 import universe.Universe._
+import nats.NAT._
+import ints.INT._
 
 
 class NaturalsIntegersSpec extends FunSpec with Matchers with GivenWhenThen {
@@ -77,6 +79,7 @@ class NaturalsIntegersSpec extends FunSpec with Matchers with GivenWhenThen {
       //implicitly[Implementation[(int.add ∙ int.zero) ∙ int.zero, int, IntAsLong]]
       valint = l()
       valint shouldEqual INTasLong(2L)
+      import nats.NAT.nat._
       val m = add(succ(zero()), succ(zero()))
       var v2: NATasInt = m()
       v2.state shouldEqual 2

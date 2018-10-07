@@ -3,6 +3,7 @@ package bools
 
 import org.scalatest.{FunSpec, GivenWhenThen, Matchers}
 import universe.Universe._
+import bools.BOOL._
 
 
 class BoolsSpec extends FunSpec with Matchers with GivenWhenThen {
@@ -60,6 +61,7 @@ class BoolsSpec extends FunSpec with Matchers with GivenWhenThen {
       val l = bool.or(bool.not(bool.`true`()), bool.not(bool.`false`()))
       value = l()
       value.state shouldEqual true
+      import bools.BOOL.bool._
       val m = and(bool.not(`true`()), bool.not(`false`()))
       value = m()
       value.state shouldEqual false
