@@ -1,17 +1,15 @@
 package banking.accounts
 
 
-import nats.{Naturals, NaturalsWithInts}
 import org.scalatest.{FunSpec, GivenWhenThen, Matchers}
 
 
-class AccountsSpec extends FunSpec with Matchers with GivenWhenThen
-  with Accounts with Naturals with AccountsImp with NaturalsWithInts {
+class AccountsSpec extends FunSpec with Matchers with GivenWhenThen {
 
   describe("...") {
     it("...") {
       val m = account.deposit(account.create, nat.succ(nat.zero))
-      val acc: AccountRep = m()
+      val acc: ACCOUNTasBalance = m()
       acc.balance.state shouldEqual 1
     }
   }
