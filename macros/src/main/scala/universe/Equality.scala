@@ -1,4 +1,4 @@
-package equality
+package universe
 
 import universe.Universe.Individual
 

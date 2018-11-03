@@ -27,8 +27,10 @@ trait Modifiers {
       private def exprToRepExpr(op: Term.Name, rhs: Term): Term = rhs match {
         case Term.Apply(f, Seq(x)) if f === op => q"this()(${exprToRepExpr(op, x)})"
         case Term.Apply(f, Seq(x, y)) if f === op => q"this()(${exprToRepExpr(op, x)})(${exprToRepExpr(op, y)})"
-        case q"$f()" => q"${term2RepTermName(f)}"
-        case q"$f(..$args)" => q"${term2RepTermRef(f)}(..${args.map(exprToRepExpr(op, _))})"
+        case q"$f()" => q"$f.imp()" //q"${term2RepTermName(f)}"
+        //case q"$f(..$args)" => q"$f.imp(..${args.map(exprToRepExpr(op, _))})"//q"${term2RepTermRef(f)}(..${args.map(exprToRepExpr(op, _))})"
+        case q"$f($x)" => q"$f.imp()(${exprToRepExpr(op, x)})"
+        case q"$f($x,$y)" => q"$f.imp()(${exprToRepExpr(op, x)})(${exprToRepExpr(op, y)})"
         case t: Term.Name => t
       }
 

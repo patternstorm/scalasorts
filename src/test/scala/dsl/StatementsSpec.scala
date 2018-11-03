@@ -32,6 +32,10 @@ class StatementsSpec extends FunSpec with Matchers with GivenWhenThen {
 
       }
 
+      implicit object canonicZero extends impAs[int.zero.type, int.rep] {
+        override def apply(): int.rep = int.zero.rep
+      }
+
 
 
 
@@ -39,8 +43,8 @@ class StatementsSpec extends FunSpec with Matchers with GivenWhenThen {
 
 
       implicitly[int.zero.type]
-      val n = int.zero()
-      val zeroRep: int.rep = n()
+
+      val zeroRep: int.rep = int.zero()
       zeroRep shouldEqual int.zero.rep
 
       val m = int.succ(int.zero())

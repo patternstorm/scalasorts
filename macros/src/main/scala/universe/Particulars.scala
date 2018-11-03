@@ -1,19 +1,36 @@
 package universe
 
+import scala.reflect.runtime.universe._
 
 trait Particulars {
   self: Individuals with Universals with Morphisms =>
 
+  trait impAs[X <: Operator, T] {
+    def apply(): T
+  }
+
+  implicit class ParticularOps[X <: Particular, U <: Universal](x: X)(implicit ev1: X :: U) {
+    def as[P](implicit imp: Implementation[X, U, P]): P = imp()
+
+    def apply(): U#rep = ev1()
+  }
 
   sealed trait Particular extends Individual {
     override type self <: Particular
-    def apply[T, U <: Universal]()(implicit ev1: self :: U, ev2: Implementation[self, U, T]): T = ev2()
   }
+
 
   trait Operator extends Particular with Simple {
     self: Singleton =>
     override type self = this.type
+
+    def apply[T, U <: Sort]()(implicit ev1: self :: U, ev2: impAs[self, T]): T = ev2()
+
+    def apply[A, B, U <: Sort, V <: Sort](a: A)(implicit ev1: self :: U ->: V, ev2: impAs[self, (A => B)]): B = ev2()(a)
+
+    def apply[A, B, C, U <: Sort, V <: Sort, W <: Sort](a: A, b: B)(implicit ev1: self :: U ->: V ->: W, ev2: impAs[self, (A => B => C)]): C = ev2()(a)(b)
   }
+
 
   abstract class Composition[X <: Particular, Y <: Particular](implicit x: X, y: Y) extends Particular with Complex {
     type left = X

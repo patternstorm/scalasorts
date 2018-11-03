@@ -8,13 +8,12 @@ trait Universals {
     implicit def decode(x: T): U#rep
   }
 
-  object as {
-    implicit def canonicalRep[U <: Sort]: as[U, U#rep] = new as[U, U#rep] {
-      override implicit def encode(x: U#rep): U#rep = x
-
-      override implicit def decode(x: U#rep): U#rep = x
-    }
-  }
+  //  object as {
+  //    implicit def canonicalRep[U <: Sort]: as[U, U#rep] = new as[U, U#rep] {
+  //      override implicit def encode(x: U#rep): U#rep = x
+  //      override implicit def decode(x: U#rep): U#rep = x
+  //    }
+  //  }
 
   trait <->[U <: Universal, T]
 
@@ -24,14 +23,10 @@ trait Universals {
 
   object <-> extends RepRules {
     implicit def sortRep[U <: Sort, T](implicit ev: U as T): U <-> T = new <->[U, T] {}
-
     implicit def tupleRep[A <: Universal, B <: Universal, P, Q](implicit ev1: A <-> P, ev2: B <-> Q): (A `,` B) <-> (P, Q) = new <->[A `,` B, (P, Q)] {}
   }
 
 
-  //trait Rep[U <: Universal]
-
-  //{val identity: UUID = UUID.randomUUID()}
   sealed trait Universal extends Individual {
     override type self <: Universal
     type rep
@@ -50,12 +45,12 @@ trait Universals {
     override type self = this.type
   }
 
-  object Sort {
-    implicit def from[T, U <: Sort](x: T)(implicit u: U, imp: U as T): U#rep = imp.decode(x)
-    implicit def to[T, U <: Sort](x: U#rep)(implicit imp: U as T): T = imp.encode(x)
-
-    //implicit def asRep[U <: Sort, T <: U#rep]: U <-> T = new <->[U, T] {}
-  }
+  //  object Sort {
+  //    implicit def from[T, U <: Sort](x: T)(implicit u: U, imp: U as T): U#rep = imp.decode(x)
+  //    implicit def to[T, U <: Sort](x: U#rep)(implicit imp: U as T): T = imp.encode(x)
+  //
+  //    //implicit def asRep[U <: Sort, T <: U#rep]: U <-> T = new <->[U, T] {}
+  //  }
 
   trait Arrow extends Universal with Complex {
     type Domain <: Universal

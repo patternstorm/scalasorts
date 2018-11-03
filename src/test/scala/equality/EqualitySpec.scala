@@ -1,6 +1,7 @@
 package equality
 
 import org.scalatest.{FunSpec, GivenWhenThen, Matchers}
+import universe.Equality
 import universe.Universe._
 
 class EqualitySpec extends FunSpec with Matchers with GivenWhenThen with Equality {

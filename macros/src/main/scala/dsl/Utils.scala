@@ -4,7 +4,7 @@ import scala.meta.{Lit, Term, Type}
 
 trait Utils {
 
-  private def identifierAsTermName(id: String): Term.Name = Term.Name(id)
+  implicit def identifierAsTermName(id: String): Term.Name = Term.Name(id)
 
   private def identifierAsTypeName(id: String): Type.Name = Type.Name(id)
 

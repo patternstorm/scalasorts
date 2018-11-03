@@ -13,7 +13,7 @@ class BoolsSpec extends FunSpec with Matchers with GivenWhenThen {
       type bool = bool.sort
       implicitly[bool as BOOLasBoolean]
       var value: BOOLasBoolean = bool.`true`.rep
-      val rep: bool.rep = value
+      var rep: bool.rep = value
       //      implicitly[nothing]
       //      implicitly[bool]
       //
@@ -49,28 +49,35 @@ class BoolsSpec extends FunSpec with Matchers with GivenWhenThen {
       //      val term2: (bool.and ∙ (bool.not ∙ bool.`false`)) ∙ (bool.not ∙ ((bool.or ∙ (bool.not ∙ bool.`true`)) ∙ bool.`false`)) = implicitly[(bool.and ∙ (bool.not ∙ bool.`false`)) ∙ (bool.not ∙ ((bool.or ∙ (bool.not ∙ bool.`true`)) ∙ bool.`false`))]
       //val term2 = implicitly[bool.not ∙ bool.not]
 
-      val T = bool.`true`()
-      val trueRep: bool.rep = T()
-      trueRep shouldEqual bool.`true`.rep
+
+      //val T = bool.`true`()
+      //      rep = bool.`true`()
+      //      rep shouldEqual bool.`true`.rep
+      //      value = bool.`true`()
+      //      value shouldEqual BOOLasBoolean(true)
+      //      rep = value
+
+      val t0 = bool.not(bool.`false`())
+      t0.as[BOOLasBoolean].state shouldEqual true
 
 
-      val n = bool.and(bool.not(bool.`false`()), bool.not(bool.`true`()))
-      value = BOOLasBoolean.asImp(n())
+      val t1 = bool.and(bool.not(bool.`false`()), bool.not(bool.`true`()))
+      value = BOOLasBoolean.asImp(t1.as[BOOLasBoolean])
       value.state shouldEqual false
 
-      val l = bool.or(bool.not(bool.`true`()), bool.not(bool.`false`()))
-      value = l()
+      val t2 = bool.or(bool.not(bool.`true`()), bool.not(bool.`false`()))
+      value = t2.as[BOOLasBoolean]
       value.state shouldEqual true
       import bools.BOOL.bool._
-      val m = and(bool.not(`true`()), bool.not(`false`()))
-      value = m()
+      val t3 = and(bool.not(`true`()), bool.not(`false`()))
+      value = t3.as[BOOLasBoolean]
       value.state shouldEqual false
 
       val s = implicitly[Morphism[bool.not.type, bool ->: bool]]
-      value = s()(n())
+      value = s()(t3.as[BOOLasBoolean])
       value.state shouldEqual true
-      val k = bool.not(n)
-      value = k()
+      val t4 = bool.not(t3)
+      value = t4.as[BOOLasBoolean]
       value.state shouldEqual true
 
       bool.and
