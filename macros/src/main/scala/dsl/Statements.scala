@@ -6,14 +6,14 @@ import scala.meta._
 
 
 object Statements extends Utils
-  with Operations with Representations
+  with Operations with Representations with Implementations
   with Constructors with Modifiers
   with Sorts {
 
   @compileTimeOnly("")
   class sort extends StaticAnnotation {
     inline def apply(sortDecl: Any): Any = meta {
-      val Sorts = new Sorts with Utils with Operations with Representations with Constructors with Modifiers {}
+      //val Sorts = new Sorts with Utils with Operations with Representations with Constructors with Modifiers {}
       val q"..$mods trait $sort { ..$decls }" = sortDecl
       val obj: Term.Name = sort
       val sobj: Lit.String = obj.value
@@ -24,6 +24,9 @@ object Statements extends Utils
           implicit def me: sort = this
           override val symbol = $sobj
           sealed trait rep
+          object rep {
+            implicit def toRep[X <: Particular](x: X)(implicit ev: X :: $obj.type): rep = ev()
+          }
           ..${Operations(obj, decls)}
           ${Implementation(obj, decls)}
         }"""

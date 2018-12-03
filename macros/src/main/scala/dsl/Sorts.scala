@@ -18,16 +18,18 @@ trait Sorts {
 
   protected def Implementation(obj: Term.Name, decls: Seq[Stat]) =
     q"""
-    trait imp[T] {
-       protected def _decode(x: T): $obj.type#rep
-       implicit def asImp(x: $obj.type#rep): T = x match {
+    abstract class impl extends Representation {
+      self: Singleton =>
+       protected def _decode(x: rep): $obj.type#rep
+       implicit def asImp(x: $obj.type#rep): rep = x match {
           ..case ${Cases(obj, decls)}
        }
-       implicit def asRep(x: T): $obj.type#rep = _decode(x)
-        implicit object imp extends ($obj.type as T) {
-            override def encode(x: $obj.type#rep): T = asImp(x)
-            override def decode(x: T): $obj.type#rep = asRep(x)
+       implicit def asRep(x: rep): $obj.type#rep = _decode(x)
+        implicit object imp extends (self reps $obj.type) {
+            override def encode(x: $obj.type#rep): rep = asImp(x)
+            override def decode(x: rep): $obj.type#rep = asRep(x)
         }
+       implicit def toRep[X <: Particular](x: X)(implicit ev: X :: $obj.type): rep = asImp(ev())
         ..${Encoders(obj, decls)}
     }"""
 
@@ -35,13 +37,13 @@ trait Sorts {
     case q"def $_: $_" => true
     case _ => false
   }).map({
-    case q"def $op: $_" => q"protected def _encode(x: $op.type#rep): T"
+    case q"def $op: $_" => q"protected def _encode(x: $op.type#rep): rep"
   })
 
   private def Cases(obj: Term.Name, decls: Seq[Stat]) = decls.filter({
     case q"def $_: $_" => true
     case _ => false
   }).map({
-    case q"def $op: $_" => p"case t : $op.type#rep => _encode(t): T"
+    case q"def $op: $_" => p"case t : $op.type#rep => _encode(t): rep"
   })
 }

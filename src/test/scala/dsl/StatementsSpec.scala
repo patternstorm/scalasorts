@@ -32,7 +32,7 @@ class StatementsSpec extends FunSpec with Matchers with GivenWhenThen {
 
       }
 
-      implicit object canonicZero extends impAs[int.zero.type, int.rep] {
+      implicit object canonicZero extends ::[int.zero.type, int.type] {
         override def apply(): int.rep = int.zero.rep
       }
 
@@ -44,20 +44,15 @@ class StatementsSpec extends FunSpec with Matchers with GivenWhenThen {
 
       implicitly[int.zero.type]
 
-      val zeroRep: int.rep = int.zero()
-      zeroRep shouldEqual int.zero.rep
 
-      val m = int.succ(int.zero())
-      val succZeroRep: int.rep = m()
+      val succZeroRep: int.rep = int.succ(int.zero())
       succZeroRep shouldEqual int.succ.rep(int.zero.rep)
 
-      val x = int.add(int.succ(int.zero()), int.zero())
-      val rep: int.rep = x()
+      var rep: int.rep = int.add(int.succ(int.zero()), int.zero())
       rep shouldEqual int.succ.rep(int.zero.rep)
 
-      val b = int.bool2Int(bool.`true`)
-      val rep2: int.rep = b()
-      rep2 shouldEqual int.succ.rep(int.zero.rep)
+      rep = int.bool2Int(bool.`true`)
+      rep shouldEqual int.succ.rep(int.zero.rep)
 
 
       val sort1 = implicitly[int.type]

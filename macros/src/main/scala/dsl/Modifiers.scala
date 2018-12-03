@@ -4,11 +4,11 @@ import scala.collection.immutable.Seq
 import scala.meta._
 
 trait Modifiers {
-  self: Utils with Operations =>
+  self: Utils with Operations with Implementations =>
 
   object Modifier {
 
-    object Implementation {
+    object Morphism {
 
       private def term2RepTermRef(t: Term): Term.Ref = {
         val tref: Term.Ref = Term.Name(t.symbol + ".rep")
@@ -27,8 +27,7 @@ trait Modifiers {
       private def exprToRepExpr(op: Term.Name, rhs: Term): Term = rhs match {
         case Term.Apply(f, Seq(x)) if f === op => q"this()(${exprToRepExpr(op, x)})"
         case Term.Apply(f, Seq(x, y)) if f === op => q"this()(${exprToRepExpr(op, x)})(${exprToRepExpr(op, y)})"
-        case q"$f()" => q"$f.imp()" //q"${term2RepTermName(f)}"
-        //case q"$f(..$args)" => q"$f.imp(..${args.map(exprToRepExpr(op, _))})"//q"${term2RepTermRef(f)}(..${args.map(exprToRepExpr(op, _))})"
+        case q"$f()" => q"$f.imp()"
         case q"$f($x)" => q"$f.imp()(${exprToRepExpr(op, x)})"
         case q"$f($x,$y)" => q"$f.imp()(${exprToRepExpr(op, x)})(${exprToRepExpr(op, y)})"
         case t: Term.Name => t
@@ -52,22 +51,22 @@ trait Modifiers {
             """
       }
 
-      private def implementation1(op: Term.Name, A: Term.Name, B: Term.Name, imp: Seq[Stat]) =
+      private def morphism1(op: Term.Name, A: Term.Name, B: Term.Name, imp: Seq[Stat]) =
         q"""
       implicit object imp extends ($op.type :: $A.type ->: $B.type) {
         override def apply(): $A.type#rep => $B.type#rep = _1 =>  ${exprToMatch1(op, imp)}
       }"""
 
-      private def implementation2(op: Term.Name, A: Term.Name, B: Term.Name, C: Term.Name, imp: Seq[Stat]) =
+      private def morphism2(op: Term.Name, A: Term.Name, B: Term.Name, C: Term.Name, imp: Seq[Stat]) =
         q"""
       implicit object imp extends ($op.type :: $A.type ->: $B.type ->: $C.type) {
         override def apply(): $A.type#rep => $B.type#rep => $C.type#rep = _1 => _2 => ${exprToMatch2(op, imp)}
       }"""
 
       def apply(op: Term.Name, signature: Type, imp: Seq[Stat]) = signature match {
-        case t"($a,$b) => $c" => implementation2(op, a, b, c, imp)
-        case t"$a => $b => $c" => implementation2(op, a, b, c, imp)
-        case t"$a => $b" => implementation1(op, a, b, imp)
+        case t"($a,$b) => $c" => morphism2(op, a, b, c, imp)
+        case t"$a => $b => $c" => morphism2(op, a, b, c, imp)
+        case t"$a => $b" => morphism1(op, a, b, imp)
       }
     }
 
@@ -77,8 +76,9 @@ trait Modifiers {
       implicit object $op extends Operator {
         override type self = $op.type
         override val symbol: String = $sop
-        ${Implementation(op, signature.get, imp)}
-        ${Operation(op, signature.get)}
+        ${Morphism(op, signature.get, imp)}
+        ..${Operation(op, signature.get)}
+        ${Implementation(op, signature.get)}
       }
       """
     }

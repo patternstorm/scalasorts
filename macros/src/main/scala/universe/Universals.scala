@@ -3,27 +3,10 @@ package universe
 trait Universals {
   self: Individuals =>
 
-  trait as[U <: Sort, T] {
-    implicit def encode(x: U#rep): T
-    implicit def decode(x: T): U#rep
-  }
+  trait reps[A <: Representation, U <: Sort] {
+    implicit def encode(x: U#rep): A#rep
 
-  //  object as {
-  //    implicit def canonicalRep[U <: Sort]: as[U, U#rep] = new as[U, U#rep] {
-  //      override implicit def encode(x: U#rep): U#rep = x
-  //      override implicit def decode(x: U#rep): U#rep = x
-  //    }
-  //  }
-
-  trait <->[U <: Universal, T]
-
-  trait RepRules {
-    implicit def arrowRep[A <: Universal, B <: Universal, P, Q](implicit ev1: A <-> P, ev2: B <-> Q): (A ->: B) <-> (P => Q) = new <->[A ->: B, P => Q] {}
-  }
-
-  object <-> extends RepRules {
-    implicit def sortRep[U <: Sort, T](implicit ev: U as T): U <-> T = new <->[U, T] {}
-    implicit def tupleRep[A <: Universal, B <: Universal, P, Q](implicit ev1: A <-> P, ev2: B <-> Q): (A `,` B) <-> (P, Q) = new <->[A `,` B, (P, Q)] {}
+    implicit def decode(x: A#rep): U#rep
   }
 
 
@@ -37,7 +20,7 @@ trait Universals {
   implicit object nothing extends Sort {
     override val symbol = "nothing"
     override type self = nothing
-    override type rep = Unit
+    override type rep = self
   }
 
   trait Sort extends Universal with Simple {
@@ -45,12 +28,10 @@ trait Universals {
     override type self = this.type
   }
 
-  //  object Sort {
-  //    implicit def from[T, U <: Sort](x: T)(implicit u: U, imp: U as T): U#rep = imp.decode(x)
-  //    implicit def to[T, U <: Sort](x: U#rep)(implicit imp: U as T): T = imp.encode(x)
-  //
-  //    //implicit def asRep[U <: Sort, T <: U#rep]: U <-> T = new <->[U, T] {}
-  //  }
+  trait Representation extends Universal with Simple {
+    self: Singleton =>
+    override type self = this.type
+  }
 
   trait Arrow extends Universal with Complex {
     type Domain <: Universal

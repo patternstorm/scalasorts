@@ -3,19 +3,29 @@ package ints
 import universe.Universe._
 import ints.INT._
 
-case class INTasInt(state: Int)
 
-object INTasInt extends int.imp[INTasInt] {
-  override def _encode(x: int.zero.rep): INTasInt = INTasInt(0)
+object INTasInt extends int.impl {
 
-  override def _encode(x: int.succ.rep): INTasInt = INTasInt(asImp(x._1).state + 1)
-
-  override def _decode(x: INTasInt): int.rep = if (x.state == 0) int.zero.rep else int.succ.rep(_decode(INTasInt(x.state - 1)))
-
-  implicit object addIntAsInt extends Implementation[int.add.type, int.sort ->: int.sort ->: int.sort, INTasInt => INTasInt => INTasInt] {
-    override def apply(): INTasInt => INTasInt => INTasInt = x => y => INTasInt(x.state + y.state)
+  case class rep(state: Int) {
+    override def toString: String = symbol + "(state=" + state + ")"
   }
 
+  override val symbol: String = "INTasInt"
+  implicit val me: INTasInt.type = this
+
+  implicit def unlift(a: Rep[INTasInt.type]): rep = a.value
+
+  override def _encode(x: int.zero.rep): rep = INTasInt(0)
+
+  override def _encode(x: int.succ.rep): rep = INTasInt(asImp(x._1).state + 1)
+
+  override def _decode(x: rep): int.rep = if (x.state == 0) int.zero.rep else int.succ.rep(_decode(INTasInt(x.state - 1)))
+
+  def apply(state: Int): rep = rep(state)
+}
+
+object INTasIntImp extends int.add.impl[INTasInt.type, INTasInt.type, INTasInt.type] {
+  override def add(a: INTasInt.rep, b: INTasInt.rep): INTasInt.rep = INTasInt(a.state + b.state)
 }
 
 

@@ -3,19 +3,29 @@ package nats
 import universe.Universe._
 import nats.NAT._
 
-case class NATasInt(state: Int)
 
-object NATasInt extends nat.imp[NATasInt] {
-  override def _encode(x: nat.zero.rep): NATasInt = NATasInt(0)
+object NATasInt extends nat.impl {
 
-  override def _encode(x: nat.succ.rep): NATasInt = NATasInt(1 + asImp(x._1).state)
-
-  override def _decode(x: NATasInt): nat.rep = if (x.state == 0) nat.zero.rep else nat.succ.rep(_decode(NATasInt(x.state - 1)))
-
-  implicit object addNatAsInt extends Implementation[nat.add.type, nat.sort ->: nat.sort ->: nat.sort, NATasInt => NATasInt => NATasInt] {
-    override def apply(): NATasInt => NATasInt => NATasInt = x => y => NATasInt(x.state + y.state)
+  case class rep(state: Int) {
+    override def toString: String = symbol + "(state=" + state + ")"
   }
 
+  override val symbol: String = "NATasInt"
+  implicit val me: NATasInt.type = this
+
+  implicit def unlift(a: Rep[NATasInt.type]): rep = a.value
+
+  override def _encode(x: nat.zero.rep): rep = NATasInt(0)
+
+  override def _encode(x: nat.succ.rep): rep = NATasInt(1 + asImp(x._1).state)
+
+  override def _decode(x: rep): nat.rep = if (x.state == 0) nat.zero.rep else nat.succ.rep(_decode(NATasInt(x.state - 1)))
+
+  def apply(state: Int): rep = rep(state)
+}
+
+object NATasIntImp extends nat.add.impl[NATasInt.type, NATasInt.type, NATasInt.type] {
+  override def add(a: NATasInt.rep, b: NATasInt.rep): NATasInt.rep = NATasInt(a.state + b.state)
 }
 
 
